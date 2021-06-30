@@ -1,0 +1,274 @@
+<?php
+App::import('Vendor', 'xtcpdf');
+$a = array(31.7,21.8); 
+$pdf = new XTCPDF('P','cm' ,$a); 
+$pdf->DisableCabecalho();
+$pdf->DisableRodape();
+$pdf->AddPage(); 
+
+$border = 0;
+
+$produtos=array();
+$produtos_id=array();
+$valor=$i=0;
+foreach($nota['ItemNota'] as $itemnota):
+	foreach($itemnota['Pedido']['ItemPedido'] as $item):
+		if(in_array($item['produto_id'],$produtos_id)){
+			$tmp_i=array_search($item['produto_id'], $produtos_id);
+			$produtos[$tmp_i]['quantidade']+=$item['quantidade'];
+			$produtos[$tmp_i]['pago']+=$item['pago'];
+		}else{
+			$produtos_id[$i]=$item['produto_id'];
+			$produtos[$i++]=$item;
+		}
+		$valor+=$item['pago'];
+	endforeach;
+endforeach;
+
+
+$pdf->SetFontSize(9);
+$pdf->SetXY(1.4, 1.8);
+//Numero da Fatura
+$pdf->SetX($pdf->GetX()+15.8);
+$pdf->Cell(3.45,1.25,$nota['Nota']['numero'],$border,1,'R');
+
+$pdf->Ln(1.4);
+$pdf->SetX(1.4);
+//Natureza Operacao
+$pdf->Cell(5.2,0.83,'Natureza Operacao',$border,0,'',0,'',0,0,'T','B');
+//CFOP
+$pdf->Cell(2.1,0.83,'CFOP',$border,0,'',0,'',0,0,'T','B');
+//IE
+$pdf->Cell(3.19,0.83,$nota['Empresa']['ie'],$border,1,'',0,'',0,0,'T','B');
+
+//
+// DESTINATARIO
+//
+$pdf->Ln(0.4);
+$pdf->SetX(1.4);
+//Razao Social
+$pdf->Cell(9.7,0.75,substr($nota['Cliente']['nome'],0,50),$border,0,'',0,'',0,0,'T','B');
+//CNPJ/CPF
+$pdf->Cell(6.45,0.75,$nota['Cliente']['cpf_cnpj'],$border,0,'',0,'',0,0,'T','B');
+//DIA
+$pdf->Cell(1,0.75,substr($nota['Nota']['emissao'],8,2),$border,0,'C',0,'',0,0,'T','B');
+$pdf->SetX($pdf->GetX()+0.1);
+//MES
+$pdf->Cell(1,0.75,substr($nota['Nota']['emissao'],5,2),$border,0,'C',0,'',0,0,'T','B');
+$pdf->SetX($pdf->GetX()+0.1);
+//ANO
+$pdf->Cell(1,0.75,substr($nota['Nota']['emissao'],0,4),$border,1,'C',0,'',0,0,'T','B');
+
+$pdf->SetX(1.4);
+//ENdereco
+$pdf->Cell(9.7,0.7,substr($nota['Cliente']['Endereco'][0]['endereco'],0,50),$border,0,'',0,'',0,0,'T','B');
+//Bairro
+$pdf->Cell(3.25,0.7,substr($nota['Cliente']['Endereco'][0]['bairro'],0,17),$border,0,'',0,'',0,0,'T','B');
+//CEP
+$pdf->Cell(3.2,0.7,$nota['Cliente']['Endereco'][0]['cep'],$border,0,'',0,'',0,0,'T','B');
+//DIA
+$pdf->Cell(1,0.7,'03',$border,0,'C',0,'',0,0,'T','B');
+$pdf->SetX($pdf->GetX()+0.1);
+//MES
+$pdf->Cell(1,0.7,'06',$border,0,'C',0,'',0,0,'T','B');
+$pdf->SetX($pdf->GetX()+0.1);
+//ANO
+$pdf->Cell(1,0.7,'2014',$border,1,'C',0,'',0,0,'T','B');
+
+$pdf->SetX(1.4);
+//Municipio
+$pdf->Cell(4.2,0.7,  substr($nota['Cliente']['Endereco'][0]['Cidade']['nome'],0,21),$border,0,'',0,'',0,0,'T','B');
+//FoneFax
+$pdf->Cell(3.85,0.7,$nota['Cliente']['telefone'],$border,0,'',0,'',0,0,'T','B');
+//UF
+$pdf->Cell(1.65,0.7,$nota['Cliente']['Endereco'][0]['Estado']['nome'],$border,0,'',0,'',0,0,'T','B');
+//IE
+$pdf->Cell(6.45,0.7,$nota['Cliente']['rg_ie'],$border,0,'',0,'',0,0,'T','B');
+//Hora Saida
+$pdf->Cell(3.2,0.7,'',$border,1,'C',0,'',0,0,'T','B');
+
+
+$pdf->Ln(0.35);
+//
+//FATURA
+//
+$pdf->Ln(0.24);
+$pdf->SetX(1.4);
+//Numero
+$pdf->Cell(2.1,0.76,$nota['Nota']['numero'],$border,0,'',0,'',0,0,'T','B');
+//Vencimento
+$pdf->Cell(2.5,0.76,  dateMysqlToPhp($nota['Nota']['vencimento']),$border,0,'',0,'',0,0,'T','B');
+//Valor
+$pdf->Cell(3.5,0.76,  moedaBr($valor),$border,0,'',0,'',0,0,'T','B');
+//Nº
+$pdf->Cell(2.19,0.76,'',$border,0,'',0,'',0,0,'T','B');
+//Vencimento
+$pdf->Cell(2.42,0.76,'',$border,0,'',0,'',0,0,'T','B');
+//Valor
+$pdf->Cell(3.45,0.76,'',$border,0,'',0,'',0,0,'T','B');
+//Cond. Pag.
+$pdf->Cell(3.35,0.76,'',$border,1,'',0,'',0,0,'T','B');
+
+$pdf->SetX(1.4);
+$pdf->SetX($pdf->GetX()+1.7);
+//Valor por extenso
+$pdf->Cell(17.7,0.75,  valorPorExtenso($valor),$border,1,'',0,'',0,0,'T','B');
+
+//
+// DADOS DOS PRODUTOS
+//
+$pdf->SetFontSize(8);
+$pdf->Ln(0.5);
+$pdf->Ln(0.8);
+$pdf->SetX(1.4);
+$pdf->Cell(0,8.6,'',$border);
+
+
+for($c=0;$c<12;$c++):
+	$pdf->SetX(1.4);
+	if(!empty($produtos[$c])){
+		$pdf->Cell(0.9,0.717,$c+1,$border,0,'',0,'',0,0,'T','B');
+		//DEscricao do produto
+		$pdf->Cell(7.9,0.717,$produtos[$c]['Produto']['nome'],$border,0,'',0,'',0,0,'T','B');
+		// Classificacal Fiscal
+		$pdf->Cell(0.85,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//Situacao Tributaria
+		$pdf->Cell(0.85,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		// UNidade
+		$pdf->Cell(0.85,0.717,$unidades[$produtos[$c]['unidade']],$border,0,'',0,'',0,0,'T','B');
+		//Quantidade
+		$pdf->Cell(1.6,0.717,$produtos[$c]['quantidade'],$border,0,'',0,'',0,0,'T','B');
+		//Valor UNitario
+		$pdf->Cell(2.09,0.717,number_format($produtos[$c]['pago']/$produtos[$c]['quantidade'],2),$border,0,'R',0,'',0,0,'T','B');
+		//Valor Total
+		$pdf->Cell(2.1,0.717,number_format($produtos[$c]['pago'],2),$border,0,'R',0,'',0,0,'T','B');
+		//ICMS
+		$pdf->Cell(0.6,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//IPI
+		$pdf->Cell(0.6,0.717,'18',$border,0,'',0,'',0,0,'T','B');
+		//Valor IPI
+		$pdf->Cell(1.05,0.717,'',$border,1,'',0,'',0,0,'T','B');
+	}else{
+		$pdf->Cell(0.9,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//DEscricao do produto
+		$pdf->Cell(7.9,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		// Classificacal Fiscal
+		$pdf->Cell(0.85,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//Situacao Tributaria
+		$pdf->Cell(0.85,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		// UNidade
+		$pdf->Cell(0.85,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//Quantidade
+		$pdf->Cell(1.6,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//Valor UNitario
+		$pdf->Cell(2.09,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//Valor Total
+		$pdf->Cell(2.1,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//ICMS
+		$pdf->Cell(0.6,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//IPI
+		$pdf->Cell(0.6,0.717,'',$border,0,'',0,'',0,0,'T','B');
+		//Valor IPI
+		$pdf->Cell(1.05,0.717,'',$border,1,'',0,'',0,0,'T','B');
+	}
+endfor;
+
+//
+// CALCULO DO IMPOSTO
+//
+$pdf->SetFontSize(9);
+$pdf->Ln(0.4);
+$pdf->SetX(1.4);
+//Base ICMS
+$pdf->Cell(3.85,0.73,'',$border,0,'',0,'',0,0,'T','B');
+//Valor ICMS
+$pdf->Cell(3.9,0.73,'',$border,0,'',0,'',0,0,'T','B');
+//Base ICMS Subs
+$pdf->Cell(3.9,0.73,'',$border,0,'',0,'',0,0,'T','B');
+//Valor ICMS Subs
+$pdf->Cell(3.88,0.73,'',$border,0,'',0,'',0,0,'T','B');
+//Valor Total dos Produtos
+$pdf->Cell(3.9,0.73,'',$border,1,'',0,'',0,0,'T','B');
+$pdf->SetX(1.4);
+//Valor Frete
+$pdf->Cell(3.85,0.73,'',$border,0,'',0,'',0,0,'T','B');
+// Valor Seguro
+$pdf->Cell(3.9,0.73,'',$border,0,'',0,'',0,0,'T','B');
+// Outras Despesas
+$pdf->Cell(3.9,0.73,'',$border,0,'',0,'',0,0,'T','B');
+//Valor IPI
+$pdf->Cell(3.88,0.73,'',$border,0,'',0,'',0,0,'T','B');
+//Valor total nota
+$pdf->Cell(3.9,0.73,'',$border,1,'',0,'',0,0,'T','B');
+//
+// TRANSPORTADOR
+//
+$pdf->Ln(0.4);
+$pdf->SetX(1.4);
+//Razao Social
+$pdf->Cell(8.8,0.7,'',$border,0,'',0,'',0,0,'T','B');
+$pdf->SetX($pdf->GetX()+2.1);
+//Frete Conta 1-Emitente, 2- Destinatario
+$pdf->Cell(0.7,0.7,'',$border,0,'C',0,'',0,0,'T','B');
+$pdf->SetX($pdf->GetX()+0.2);
+//PLaca VEiculo
+$pdf->Cell(2.8,0.7,'',$border,0,'',0,'',0,0,'T','B');
+//UF
+$pdf->Cell(0.95,0.7,'',$border,0,'',0,'',0,0,'T','B');
+//CNPJ
+$pdf->Cell(3.85,0.7,'',$border,1,'',0,'',0,0,'T','B');
+$pdf->SetX(1.4);
+// ENdereco
+$pdf->Cell(8.8,0.7,'',$border,0,'',0,'',0,0,'T','B');
+//Municipio
+$pdf->Cell(5.8,0.7,'',$border,0,'C',0,'',0,0,'T','M');
+//UF
+$pdf->Cell(0.95,0.7,'',$border,0,'',0,'',0,0,'T','B');
+//IE
+$pdf->Cell(3.85,0.7,'',$border,1,'',0,'',0,0,'T','B');
+$pdf->SetX(1.4);
+// Quantidade
+$pdf->Cell(3.2,0.7,'',$border,0,'',0,'',0,0,'T','B');
+//Especie
+$pdf->Cell(3.25,0.7,'',$border,0,'C',0,'',0,0,'T','B');
+//Marca
+$pdf->Cell(3.25,0.7,'',$border,0,'',0,'',0,0,'T','B');
+//Numero
+$pdf->Cell(3.30,0.7,'',$border,0,'',0,'',0,0,'T','B');
+//Peso Bruto
+$pdf->Cell(3.25,0.7,'',$border,0,'',0,'',0,0,'T','B');
+//Peso Liquido
+$pdf->Cell(3.15,0.7,'',$border,1,'',0,'',0,0,'T','B');
+
+//
+// DADOS ADICIONAIS
+//
+$pdf->Ln(0.4);
+$pdf->Ln(0.55);
+$pdf->SetX(1.4);
+$pdf->SetX($pdf->GetX()+1.5);
+
+//Numero
+$pdf->Cell(3,0.85,$nota['Nota']['numero'],$border,0,'C',0,'',0,0,'T','B');
+$pdf->Cell(3,0.85,'',$border,0,'C',0,'',0,0,'T','B');
+$pdf->Cell(3,0.85,'',$border,1,'C',0,'',0,0,'T','B');
+//Vencimento
+$pdf->SetX(1.4);
+$pdf->SetX($pdf->GetX()+1.5);
+$pdf->Cell(3,0.85,dateMysqlToPhp($nota['Nota']['vencimento']),$border,0,'C',0,'',0,0,'T','B');
+$pdf->Cell(3,0.85,'',$border,0,'C',0,'',0,0,'T','B');
+$pdf->Cell(3,0.85,'',$border,1,'C',0,'',0,0,'T','B');
+//Valor
+$pdf->SetX(1.4);
+$pdf->SetX($pdf->GetX()+1.5);
+$pdf->Cell(3,0.85,moedaBr($valor),$border,0,'C',0,'',0,0,'T','B');
+$pdf->Cell(3,0.85,'',$border,0,'C',0,'',0,0,'T','B');
+$pdf->Cell(3,0.85,'',$border,1,'C',0,'',0,0,'T','B');
+
+//Dados dos Produtos
+ob_clean();
+	ob_end_clean();
+	ob_start();
+	echo $pdf->Output();
+	ob_end_flush();
+?>

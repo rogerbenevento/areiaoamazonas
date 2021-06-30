@@ -1,0 +1,125 @@
+
+.dialog-content  {
+  display:table;
+  width: 500px;
+  padding: 10px;
+  background: #fff;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  border-radius:4px;
+}
+.dialog-content  form{
+	
+}
+.dialog-content  form fieldset{
+	border: 0;
+}
+.dialog-content  form fieldset p{
+	padding-bottom: 5px;
+}
+.dialog-content  form fieldset p label{
+	display: block;
+	width: 80px;
+	float: left;
+	text-align: right;
+	padding-right: 5px;
+	line-height: 20px;
+}
+.dialog-content  form fieldset p input{
+	border: 1px solid #333;
+	padding: 5px;
+}
+.dialog-content  form fieldset input.btn{
+	display: block;
+	float: right;
+	cursor: pointer;
+	width: 80px;
+	padding: 5px;
+	border: 0;
+	background: #333;
+	color: #fff;
+	border: 1px solid #000;
+	margin: 2px;
+}
+.dialog-content  form fieldset input.cancel{
+	display: block;
+	float: right;
+	cursor: pointer;
+	width: 80px;
+	padding: 5px;
+	border: 0;
+	background: #ddd;
+	color: #333;
+	border: 1px solid #000;
+	margin: 2px;
+}
+.dialog-content  form table{
+	width: 70%;
+	margin: 10px 0;
+	border-collapse: collapse;
+}
+.dialog-content  form table thead th, .dialog-content  form table tbody td{
+	border-bottom: 1px solid #333;
+	padding: 5px;
+}
+.dialog-content #resultado{ background: #eee; font-size: 14px; text-align: center; color: red; font-weight: bold; padding: 10px; margin: 10px 0; display: none; }
+
+.dialog-content  fieldset{ border: 1px solid #ccc; margin: 10px 0; width: 700px; padding: 5px; }
+.dialog-content  fieldset legend{ font-size: 16px; font-weight: bold; padding: 10px 5px; }
+.dialog-content  fieldset label{ display: block; padding-bottom: 5px; }
+.dialog-content  fieldset label span{ display: block; width: 100px; float: left; font-weight: bold; }
+.dialog-content  fieldset table{ width: 95%; margin: 0 auto; border-collapse: collapse; }
+.dialog-content  fieldset table td, .dialog-content  fieldset table th{ padding: 5px; border-bottom: 1px dotted #ccc; }
+.dialog-content  fieldset table th, .dialog-content  fieldset table tfoot td{ letter-spacing: -1px; font-size: 13px; }
+.dialog-content  fieldset table tbody tr:hover{ background: #eee; }
+
+.dialog-content  > p:first-child{
+  margin-top:0;
+}
+.dialog-content  > p:last-child{
+  margin-bottom:0;
+}
+
+.dialog-content .close{
+  position:absolute;
+  top:5px;
+  right:5px;
+  padding:2px;
+  background:#fff;
+}
+.dialog-content .close img{
+  opacity:0.3;
+}
+.dialog-content .close:hover img{
+  opacity:1.0;
+}
+
+.dialog-content .loading {
+  text-align: center;
+}
+
+.dialog-content .image {
+  text-align: center;
+}
+
+.dialog-content img {
+  border: 0;
+  margin: 0;
+}
+
+.dialog-content_overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height:100%;
+  width:100%;
+}
+
+.facebox_hide {
+  z-index:-100;
+}
+
+.facebox_overlayBG {
+  background-color: #000;
+  z-index: 99;
+}

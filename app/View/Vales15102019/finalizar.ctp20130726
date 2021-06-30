@@ -1,0 +1,43 @@
+<?php echo $this->Html->css(array('jqueryui/smoothness/jquery-ui'), null, array('inline' => false)) ?>
+<?php echo $this->Html->script(array( 'jquery.price_format.min', 'jquery-ui.min','jquery.maskedinput.min'), array( 'inline' => false ) ) ?>
+<script>
+	$(function(){
+		$('#ValeDataEntrega').mask('99/99/9999').datepicker(DATE_PICKER_CONFIG);
+		$('#ItemPedidoPago').priceFormat({
+			prefix: "",
+			centsSeparator: ",",
+			thousandsSeparator: ""
+		});
+		$('##ItemPedidoQuantidade').priceFormat({
+			prefix: "",
+			centsSeparator: ".",
+			thousandsSeparator: ""
+		});
+	})
+</script>
+<p class="lead">
+	<?php echo (!empty($pedido))?
+		$this->Html->link( 'FINALIZAR PEDIDO ('.$pedido.')', array( 'controller' => 'pedidos', 'action' => 'finalizar',$pedido, $this->params['prefix'] => true ) )
+		:$this->Html->link( 'VALES', array( 'controller' => 'vales', 'action' => 'index', $this->params['prefix'] => true ) ) ;
+	?>
+	 :: Finalizar Vale</p>
+	<?php 
+		echo $this->Form->create( 'Vale' );
+		echo $this->Form->hidden( 'ItemPedido.id');
+		echo $this->Form->input( 'fornecedor_id', array( 'class' => 'span6','options'=>$fornecedores ,'empty'=>'[Fornecedor]','required'=>true) );
+		echo $this->Form->input( 'motorista_id', array( 'class' => 'span6','options'=>$motoristas,'empty'=>'[Motorista]','required'=>true) );
+		
+		echo $this->Form->input( 'Vale.codigo', array( 'label' => 'Número do Vale', 'class' => 'span6','type'=>'text') );
+		echo $this->Form->input( 'ItemPedido.quantidade', array( 'label' => 'Quantidade Entregue', 'class' => 'span6','type'=>'text','required'=>true) );
+		echo $this->Form->input( 'ItemPedido.unidade', array( 'label' => 'Unidade', 'options'=>$unidades,'empty'=>'[Unidade]','class'=>'span6'));
+		echo $this->Form->input( 'periodo_id', array('label'=>'Periodo:','options'=>$periodos,'class'=>'span6','required'=>true) );
+		echo $this->Form->input( 'data_entrega', array( 'label' => 'Data', 'class' => 'span6','type'=>'text','value'=>'','placeholder'=>'00/00/0000','required'=>true ) );
+		echo $this->Form->input( 'ItemPedido.pago', array( 'label' => 'Valor Pago', 'class' => 'span6','type'=>'text','placeholder'=>'0,00','required'=>true ) );
+	?>
+<div class="form-actions">
+	<?php echo $this->Form->submit( 'Finalizar', array( 'class' => 'btn btn-primary' ) ) ?><br />
+	ou
+	<?php echo $this->Html->link( 'Voltar', array( 'controller' => 'taxas', 'action' => 'index', $this->params['prefix'] => true ) ) ?>
+</div>
+<?php echo $this->Form->end() ?>
+<?php if (Configure::read('debug') == 2) echo $this->element('sql_dump') ?>

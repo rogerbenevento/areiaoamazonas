@@ -1,0 +1,95 @@
+/* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
+#form_container{
+	width:680px;
+	margin:0 auto;
+	padding:8px;
+	border:1px solid #aaa!important;
+	background:#FFF!important;
+	-webkit-border-radius:6px;
+	-moz-border-radius:6px;
+	border-radius:6px;
+	-webkit-box-shadow:0 0 4px rgba(0,0,0,.3);
+	-moz-box-shadow:0 0 4px rgba(0,0,0,.3);
+	box-shadow:0 0 4px rgba(0,0,0,.3);
+	behavior:url(src/PIE.htc)
+}
+#form_container table{
+	border:0;
+	border-collapse:collapse;
+	border-spacing:0;
+	width:98%;
+	margin:0 auto
+}
+#form_container tr{
+	width:100%;
+	border-bottom:0
+}
+#form_container tr:hover{
+	background:0
+}
+#form_container td{width:48%}
+#form_container label{float:left}
+#form_container input[type=text],
+#form_container textarea{
+	width:99%;
+	height:32px;
+	border:1px dotted #999!important;
+	background:#F0F0F0;
+	font:italic 12px Georgia;
+	padding-left:12px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+	border-radius:2px;
+	background:-moz-linear-gradient(top, #fff 0, #eee 63%, #e6e6e6 64%, #f0f3f9 100%);
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%, #fff),color-stop(63%, #eee),color-stop(64%, #e6e6e6),color-stop(100%, #f0f3f9));
+	background:-webkit-linear-gradient(top, #fff 0, #eee 63%, #e6e6e6 64%, #f0f3f9 100%);
+	background:-o-linear-gradient(top, #fff 0, #eee 63%, #e6e6e6 64%, #f0f3f9 100%);
+	background:-ms-linear-gradient(top, #fff 0, #eee 63%, #e6e6e6 64%, #f0f3f9 100%);
+	background:linear-gradient(top, #fff 0, #eee 63%, #e6e6e6 64%, #f0f3f9 100%);
+	behavior:url(src/PIE.htc)
+}
+#form_container textarea{min-height:80px}
+#form_container input[type=submit]{
+	float:left;
+	padding:4px 8px;
+	text-transform:uppercase;
+	letter-spacing:-.1em;
+	font-size:18px;
+	font-weight:900;
+	border:1px solid #ccc;
+	color:#e43226;
+	height:32px;
+	background:-moz-linear-gradient(top, #f6f8f9 0, #e5ebee 63%, #d7dee3 64%, #f5f7f9 100%);
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%, #f6f8f9),color-stop(63%, #e5ebee),color-stop(64%, #d7dee3),color-stop(100%, #f5f7f9));
+	background:-webkit-linear-gradient(top, #f6f8f9 0, #e5ebee 63%, #d7dee3 64%, #f5f7f9 100%);
+	background:-o-linear-gradient(top, #f6f8f9 0, #e5ebee 63%, #d7dee3 64%, #f5f7f9 100%);
+	background:-ms-linear-gradient(top, #f6f8f9 0, #e5ebee 63%, #d7dee3 64%, #f5f7f9 100%);
+	background:linear-gradient(top, #f6f8f9 0, #e5ebee 63%, #d7dee3 64%, #f5f7f9 100%);
+	behavior:url(src/PIE.htc)
+}
+#form_container input[type=submit]:active{
+	background:-moz-linear-gradient(top, #eee 0, #e0e0e0 63%, #d0d0d0 64%, #ddd 100%);
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%, #eee),color-stop(63%, #e0e0e0),color-stop(64%, #d0d0d0),color-stop(100%, #ddd));
+	background:-webkit-linear-gradient(top, #eee 0, #e0e0e0 63%, #d0d0d0 64%, #ddd 100%);
+	background:-o-linear-gradient(top, #eee 0, #e0e0e0 63%, #d0d0d0 64%, #ddd 100%);
+	background:-ms-linear-gradient(top, #eee 0, #e0e0e0 63%, #d0d0d0 64%, #ddd 100%);
+	background:linear-gradient(top, #eee 0, #e0e0e0 63%, #d0d0d0 64%, #ddd 100%);
+	border:1px solid #999;
+	behavior:url(src/PIE.htc)
+}
+#form_container input.ie,#form_container textarea.ie{background:#F9F9F9!important}
+#form_container .error-message{
+	display: inline;
+	float: left;
+	height: 12px;
+	padding:1px 4px;
+	font:italic 11px/14px Verdana,Helvetica,Arial !important;
+	color:#fff;
+	background:#E43226;
+}
+#form_container div.ddd{
+	width:20%;
+	margin-right:10px;
+	float:left
+}
+#form_container div.fone{width:78%;float:right}

@@ -1,0 +1,41 @@
+<?php
+	if(empty($row['Motorista']['id'])){
+		if(empty($motorista['Motorista']['id'])){
+			$row['Motorista']['placa']='__________________________';
+			$row['Motorista']['nome']=" _____________________________________________________________";
+		}else{
+			$row['Motorista']['placa']=$motorista['Motorista']['placa'];
+			$row['Motorista']['nome']=$motorista['Motorista']['nome'];
+		}
+	}
+?>
+<div style="width: 98%;">
+	<div style="float:left"><h2>COMPROVANTE DE ENTREGA</h2></div>
+	<div style='float: right'>
+		<h2>
+			<?php 
+				if(!empty($row['ItemPedido']['pedido_id']))
+					echo 'Nº '.(!empty($row['Vale']['codigo'])? 'X'.$row['Vale']['codigo'] : @$row['Vale']['id']); 
+			?>
+		</h2>
+	</div>
+</div>
+<fieldset style="width: 98%">
+    <!--<legend>Dados do Item</legend>-->
+    <label><span>Nome Obra:&nbsp; </span><?php echo $row['ItemPedido']['Pedido']['Obra']['nome']; ?>&nbsp;</label>
+    <label><span>Endere&ccedil;o: </span><?php echo @$row['ItemPedido']['Pedido']['Obra']['endereco']; ?>&nbsp;</label>
+    <label style='width: 48%;float: left'><span>Bairro: </span><?php echo @$row['ItemPedido']['Pedido']['Obra']['Cliente']['bairro']; ?>&nbsp;</label>
+    <label><span>Cidade: </span><?php echo @$row['ItemPedido']['Pedido']['Obra']['Cidade']['nome']; ?>&nbsp;</label>
+</fieldset>
+<fieldset style="width: 98%">
+    <!--<legend>Dados do Item</legend>-->
+    <label style='float: left;width: 68%'><span>Placa: </span><?php echo @$row['Motorista']['placa']; ?>&nbsp;</label>
+    <label ><span>Data: </span><?php echo date('d/m/Y',strtotime('now')) ?>&nbsp;</label>
+    <label style='float: left;width: 48%'><span>Motorista: </span><?php echo @$row['Motorista']['nome']; ?>&nbsp;</label>
+    <label style='float: right;width: 48%'><span>Nota: </span><?php echo @$row['ItemPedido']['Pedido']['ItemNota'][0]['Nota']['numero']; ?>&nbsp;</label>
+    <label style='float: left;width: 48%'><span>Material: </span><?php echo @$row['ItemPedido']['Produto']['nome']; ?>&nbsp;</label>
+    <label style='float: right;width: 48%'><span style='min-width: 30px'><?php echo @$unidade[$row['ItemPedido']['unidade']]; ?>: </span>_____________________________________</label>
+    <label style='float: right;width: 48%'>
+	<span style='min-width: 30px'><?php echo @$unidade[$row['ItemPedido']['unidade']].'(Entregue)'; ?>: </span>______________________________</label>
+    
+</fieldset>

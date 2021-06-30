@@ -1,0 +1,67 @@
+$(document).ready(function(){
+	$('#NotaEmissao,#NotaVencimento').mask('99/99/9999').datepicker(DATE_PICKER_CONFIG);
+	// Busca o pedido, pelo ID
+	$('#frmBuscarPedido').submit(function(e){
+                e.preventDefault();
+		var pedido_id = $('#pedido_id').val();
+		$('#itens_pedido').fadeIn('fast').html('<p style="text-align: center;">Carregando...</p>');
+		$.post(APP +'/'+$('#role').val()+'/item_pedidos/by_pedido/1',{ 
+                    pedido_id: pedido_id 
+                },function(data){
+                        if (data) {
+                                $('#itens_pedido').html(data);
+                                $('#DevolucaoPedidoId').val($('#pedido_id').val());
+                        }else if (!data) $('#itens_pedido').html('<p style="text-align: center; color: red;">Desculpe, não foram encontrados itens do pedido informado, veja se os mesmos já foram devolvidos!</p>');
+                },'html');                    
+	});
+	
+	// Bloqueando o Enter no campo Cliente
+	$('#NotaCliente').keypress(function(e){
+		if ( e.which == 13 ) {
+			return false;
+		}
+	}).simpleAutoComplete(APP +'/'+$('#role').val()+'/clientes/all', {}, callbackCliente);
+	function callbackCliente( par ) { 
+		$('#NotaClienteId').val(par[0]);
+		carregarPedidos();
+	}
+	
+	function carregarPedidos(){
+		if(!isNaN($("#NotaClienteId").val()) && $("#NotaClienteId").val()>0 ){
+			$.post(APP +'/'+$('#role').val()+'/pedidos/by_cliente/'+$("#NotaClienteId").val(),{
+				selected:$('#NotaClienteId').val() 
+			},function(data){
+				$('#boxPedidos').html(data);
+			});
+			$('#boxPedidos').show();
+		}
+	}
+	function VerificaTabela(){
+		if($('#boxPedidos table').find("tr").size() == 1){
+			$('#boxPedidos').html('<p>Não há mais pedidos!</p>');
+		}
+	}
+	$('.btn-pedido-add').die('click').live('click',function(e){
+		var id= $(this).attr('rel');
+		$.post(APP +'/'+$('#role').val()+'/item_notas/add/',{
+			pedido_id: id ,
+			cliente:$('#boxPedidos tr.'+id+' .cliente').html(),
+			obra:$('#boxPedidos tr.'+id+' .obra').html()
+		},function(data){
+			$('#tbPedidos').load(APP +'/'+$('#role').val()+'/item_notas/tbpedidos');
+			$('#boxPedidos tr.'+ id).fadeOut(function(){$(this).remove();VerificaTabela();});
+			
+		});
+	})
+	$('.remover').die('click').live('click', function(e){
+		e.preventDefault();	
+		if (confirm('Deseja realmente remover este item?')) {
+			var id = $(this).parents('tr').attr('class');
+			$.post(APP +'/'+$('#role').val()+'/item_notas/del',{ 
+				indice: id 
+			},function(data){
+				$('#tbPedidos .'+ id).remove();
+			},'html');
+		}
+	});
+});

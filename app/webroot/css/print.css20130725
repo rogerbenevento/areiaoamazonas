@@ -1,0 +1,112 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    font: 12px Arial, Verdana, Tahoma;
+    padding: 10px 30px;
+}
+
+#print{
+    padding: 0px;
+    text-align: right;
+}
+#print a{
+    color: #666;
+    font-size: 11px;
+}
+#print a:hover{
+    color: #333;
+    text-decoration: none;
+}
+
+@media print{
+	#print a{ display: none; }
+}
+
+#header{
+    padding: 0 0 10px;
+    border-bottom: 1px solid #333;
+    margin: 0 0 10px;
+}
+
+#conteudo{
+    
+}
+#conteudo h1{
+    font-size: 20px;
+    padding: 5px 0;
+}
+#conteudo fieldset{
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+#conteudo fieldset legend{
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 5px 5px;
+}
+#conteudo fieldset label{
+    display: block;
+    padding: 2px 0;
+    line-height: 24px;
+}
+#conteudo fieldset label span{
+    float: left;
+    min-width: 60px;
+    font-weight: bold;
+}
+
+#footer{
+    margin: 20px 0 0;
+    border-top: 1px solid #333;
+    padding: 10px 0;
+}
+#footer p{
+    text-align: center;
+    color: #666;
+}
+
+.obs{
+	padding: 5px;
+}
+/*AREIAO*/
+body#areiao div#header img{
+	width: 100px;
+	float: left;
+}
+body#areiao div#header{
+	height: 89px;
+}
+body#areiao div#header div{
+	margin-top: 10px;
+	font-size: 30px;
+	color:#FF0000;
+	text-align: center;
+	margin-bottom: 10px;
+}
+body#areiao div#header p{
+	text-align: center;
+}
+/*SCORPION*/
+
+body#scorpion div#header div.img{
+	text-align: center;
+	width: 99%;
+	height: 100px;
+}
+body#scorpion div#header div.img img.scorpion-logo{
+	height: 100px;	
+	float: left;
+}
+body#scorpion div#header div.img img.scorpion-logo-text{
+	height: 100px;	
+}
+body#scorpion div#header{
+	height: 150px;
+}
+body#scorpion div#header p{
+	margin-top: 12px;
+	text-align: center;
+	font-size: 16px;
+}

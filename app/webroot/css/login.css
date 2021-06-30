@@ -1,0 +1,17 @@
+@CHARSET "UTF-8";
+body{
+	position: relative;
+	background-color: white;
+	background-image: url(../img/grid-18px-masked.png);
+	background-repeat: repeat-x;
+}
+h1{ text-align: center; }
+body.login .container { max-width: 600px }
+body.login .content { border-top: 1px solid #DDD }
+body.login form { margin-bottom: 0 }
+body.login fieldset { padding-top: 0 }
+body.login label { margin: 0 0 10px 0; text-align: left; font-size: 1.2em }
+body.login .input { margin: 0 auto; width: 360px }
+body.login .input input { font-size: 1.4em; padding: 5px 10px; height: 30px; width: 340px; }
+.submit{ display: table; width: 95%; padding: 10px 0 0 }
+.submit input{ float: right; }

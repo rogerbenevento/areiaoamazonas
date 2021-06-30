@@ -1,0 +1,62 @@
+<?php echo $this->Html->css(array('simpleAutoComplete2', 'jqueryui/jquery-ui'), null, array('inline' => false)) ?>
+<?php echo $this->Html->script(array('simpleAutoComplete', 'jquery.mask', 'jquery-ui.min', 'jquery.price_format.min', 'contas/edit'), array('block' => 'scriptBottom')) ?>
+<p class="lead">
+	<?php echo $this->Html->link('Gerenciar Contas a Pagar / Receber', array('controller' => 'contas', 'action' => 'index')) ?>
+	:: Nova Conta
+</p>
+<style>
+	#boxPedidos{
+		max-height: 200px;
+		background: white;
+		overflow-y: scroll;
+		border: 1px solid #ccc;
+		display: none;
+	}
+	.pull-left{
+		margin-right: 20px;
+	}
+</style>
+<div id="vincular_pedido" class="well well-small hide" >
+	<h5>Vincular Pedido</h5>
+	<form id="frmBuscarPedido">
+		<input type="hidden" id="ClienteId" />
+		<input type="text" class="span6" id="Cliente" placeholder="Selecione um Cliente"/>
+<!--		<button type="submit" class="btn btn-info buscarPedido"><i class="icon-search icon-white"></i>&nbsp;Buscar Pedidos</button>-->
+	</form>
+	<div id="boxPedidos">
+
+	</div>
+	<!-- tabela de itens do pedido -->
+	<div id="tbPedidos" class="well">
+		<?php echo $this->element('tbpedidos'); ?>
+	</div>
+	<!-- Fim da tabela de itens do pedido -->
+</div>
+<?php echo $this->Form->create('Conta', array()); ?>
+<?php echo $this->Form->input('tipo', array('options' => $tipos, 'class' => 'span2', 'empty' => '[ Escolha o tipo de operação ]', 'label' => 'Tipo de Operação', 'div' => array('class' => 'pull-left'))); ?>
+<?php echo $this->Form->input('tipo_conta_id', array('class' => ' span2', 'empty' => '[ Escolha o Tipo de Conta ]', 'label' => 'Tipo Conta', 'div' => array('class' => 'pull-left'))); ?>
+<?php #echo $this->Form->input( 'subtipo_conta_id', array( 'class' => 'span6', 'empty' => '[ Escolha o SubTipo de Conta ]', 'label' => 'SubTipo Conta' ) ); ?>
+<?php echo $this->Form->input('empresa_id', array('options' => $empresas, 'class' => 'span2', 'empty' => '[ Escolha a Empresa ]', 'label' => 'Empresa')); ?>
+<?php #echo $this->Form->input( 'conta_corrente_id', array( 'options' => $contas, 'class' => 'span6', 'empty' => '[ Escolha a conta destino ]', 'label' => 'Conta Destino' ) ); ?>
+<?php #echo $this->Form->input( 'tipo_pagamento_id', array( 'options' => $tipos_pagamentos, 'class' => 'span6', 'empty' => '[ Escolha o tipo de pagamento ]', 'label' => 'Pagamento' ) ); ?>
+<?php #echo $this->Form->input( 'loja_id', array( 'class' => 'span6', 'empty' => '[ Escolha uma Loja ]' ) ); ?>
+<?php echo $this->Form->input( 'tipo_pagamento_id', array( 'options' => $tipos_pagamentos, 'class' => 'span3', 'empty' => '[ Escolha o tipo de pagamento ]', 'label' => 'Tipo de Pagamento','div'=>array('class'=>'pull-left pagto_fornecedor hide')) ); ?>
+<?php echo $this->Form->input( 'fornecedor_id', array( 'options' => $fornecedores, 'class' => 'span3', 'empty' => '[ Escolha o fornecedor ]', 'div'=>array('class'=>'pagto_fornecedor hide')) ); ?>
+<?php echo $this->Form->input('descricao', array('label' => 'Descrição', 'class' => 'span6')); ?>
+<?php echo $this->Form->input('numero_documento', array('label' => 'Numero Documento', 'class' => 'span2', 'div' => array('class' => 'pull-left'))); ?>
+<?php echo $this->Form->input('data_vencimento', array('label' => 'Data/Vencimento', 'class' => 'span2', 'type' => 'text', 'div' => array('class' => 'pull-left'))); ?>
+<?php echo $this->Form->input('valor', array('class' => 'span2', 'type' => 'text')); ?>
+<?php echo $this->Form->input('parcela', array('default' => 1, 'class' => 'span1', 'div' => array('class' => 'pull-left'))); ?>
+<?php echo $this->Form->input('parcelas', array('default' => 1, 'class' => 'span1')); ?>
+
+
+
+<?php echo $this->Form->hidden('intervalos'); ?>
+<div class=" well boxIntervaloParcelas" style="display: none;">
+	<?php #echo $this->Form->input( 'IntervaloParcela.1',array('class'=>'span1','label'=>'Parcela 1 e Parcela 2','value'=>30,'type'=>'number')); ?>		
+</div>
+<?php echo $this->Form->input('observacao', array('type' => 'textarea', 'class' => 'span6', 'rows' => 5, 'label' => 'Observação')); ?>
+<?php echo $this->Form->submit('Gravar', array('class' => 'btn btn-primary')); ?>
+<?php echo $this->Form->end(); ?>
+
+<?php echo $this->Html->link('voltar', array('controller' => 'contas', 'action' => 'index', 'admin' => true)); ?>

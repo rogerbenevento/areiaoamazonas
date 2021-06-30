@@ -1,0 +1,13 @@
+$(document).ready(function(){
+
+	$('#valor,.frete,#ItemPedidoValorUnitario').priceFormat({
+			prefix: "",
+			centsSeparator: ",",
+			thousandsSeparator: ""
+	});
+	$('#ItemPedidoValorUnitario,#ItemPedidoQuantidade').keyup(function(){
+		var valor_total=($('#ItemPedidoValorUnitario').val().replace('R$ ','').replace('.','').replace(',','.')*1)
+					* $('#ItemPedidoQuantidade').val();
+		$('#ItemPedidoPago,#ItemPedidoPagoDisplay').val( number_format(valor_total,2,',','.'));
+	});
+});

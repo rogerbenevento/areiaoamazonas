@@ -1,0 +1,138 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    font: 12px Arial, Verdana, Tahoma;
+    padding: 10px 30px;
+}
+
+#print{
+    padding: 0px;
+    text-align: right;
+}
+#print a{
+    color: #666;
+    font-size: 11px;
+}
+#print a:hover{
+    color: #333;
+    text-decoration: none;
+}
+
+
+
+#header{
+    padding: 0 0 10px;
+    border-bottom: 1px solid #333;
+    /*margin: 0 0 10px;*/
+    margin: 0 0 3px;
+}
+
+#conteudo{
+    
+}
+#conteudo h1{
+    font-size: 20px;
+    padding: 3px 0;
+}
+#conteudo fieldset{
+    border: 1px solid #ccc;
+    padding: 3px;
+}
+#conteudo fieldset legend{
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 5px 5px;
+}
+#conteudo fieldset label{
+    display: block;
+    padding: 2px 0;
+    /*line-height: 24px;*/
+}
+#conteudo fieldset label span{
+    float: left;
+    min-width: 60px;
+    font-weight: bold;
+}
+
+#footer{
+    /*margin: 20px 0 0;*/
+    margin: 3px 0 0;
+    border-top: 1px solid #333;
+    /*padding: 10px 0;*/
+}
+#footer p{
+    text-align: center;
+    color: #666;
+}
+@media print{
+	#print a,#footer{ display: none; }
+}
+.obs{
+	padding: 5px;
+	font-size: 10px;
+}
+h2{
+	font-size: 12px;
+}
+/*AREIAO*/
+body#areiao div#header img{
+	width: 55px;
+	float: left;
+}
+body#areiao div#header{
+	/*height: 89px;*/
+	height: 45px;
+}
+body#areiao div#header div{
+/*	margin-top: 10px;*/
+	/*font-size: 30px;*/
+	font-size: 15px;
+	/*color:#FF0000;*/
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 5px;
+}
+body#areiao div#header p{
+	text-align: center;
+}
+
+
+/*SCORPION*/
+
+body#scorpion div#header div.img{
+	text-align: right;
+	width: 60%;
+	/*height: 100px;*/
+	height: 50px;
+	float:left;
+}
+body#scorpion div#header div.img img.scorpion-logo{
+	/*height: 100px;*/	
+	height: 50px;	
+	float: left;
+}
+body#scorpion div#header div.img img.scorpion-logo-text{
+	/*height: 100px;*/	
+	height: 50px;	
+}
+body#scorpion div#header{
+	/*height: 150px;*/
+	height: 50px;
+}
+body#scorpion div#header p{
+	float:left;
+	width: 39%;
+	/*margin-top: -5px;*/
+	text-align: right;
+	padding-top: 15px;
+	font-size: 11px;
+	vertical-align: middle;
+}
+
+#conteudo fieldset label{
+	font-weight: bold;
+}
+#conteudo fieldset label span{
+}

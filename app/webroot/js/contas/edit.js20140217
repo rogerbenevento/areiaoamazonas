@@ -1,0 +1,166 @@
+$(document).ready(function(){
+	checarTipoAlteracao();
+	
+	$('#ContaValor,#ContaPago').priceFormat({
+		prefix: "",
+		centsSeparator: ",",
+		thousandsSeparator: "."
+	});
+	$('#ContaDataVencimento').mask('99/99/9999')
+		   .datepicker(DATE_PICKER_CONFIG);
+	
+	
+	$('#ContaTipo').change(function(){
+		$('#ContaTipoContaId').html('<option>Carregando...</option>');
+		$.post(APP+'/'+$('#role').val()+'/tipos_contas/by_tipo?tipo='+$(this).val(),{
+		},function(data){
+			$('#ContaTipoContaId').html(data);
+		});
+	});
+//	$('#ContaTipoContaId').change(function(){
+//		$('#ContaSubtipoContaId').html('<option>Carregando...</option>');
+//		$.post(APP+'/'+$('#role').val()+'/sub_tipos_contas/by_tipo?tipo='+$(this).val(),{
+//		},function(data){
+//			$('#ContaSubtipoContaId').html(data);
+//		});
+//	});
+	$('#ContaTipoContaId').change(function(){
+		if( $(this).val() == 1 ){
+			$('#vincular_pedido,.pagto_fornecedor').slideDown(400);
+			$('.pagto_fornecedor select').prop('disabled',false);
+		}else{
+			$('#vincular_pedido,.pagto_fornecedor').slideUp(400);
+			$('#boxPedidos').html('');
+			$('.pagto_fornecedor select').prop('disabled',true);
+		}
+	});
+	
+	$('.alterar').click(function(){ checarTipoAlteracao(); });
+	
+	function checarTipoAlteracao(){
+		var tipo = $('.alterar:checked').val(),
+			campos = ['ContaParcela', 'ContaParcelas'],
+			i,
+			totalCampos = campos.length;
+				
+		if (tipo == 'uma') {
+			for (i = 0; i < totalCampos; i++) {
+				$('#'+campos[i]).attr('disabled', true);
+			}
+		} else if (tipo == 'todas') {
+			for (i = 0; i < totalCampos; i++) {
+				$('#'+campos[i]).removeAttr('disabled');
+			}
+		}
+	}
+	//
+	//=============== INTERVALO ENTRE DATAS
+	//
+	function IntervaloEntreParcelas(){
+		var parcela = $('#ContaParcela').val(),
+			parcelas = $('#ContaParcelas').val();
+		//alert(parcela+' '+parcelas);
+		if(parcela<parcelas){
+			$('.boxIntervaloParcelas').html('<p class="lead">Vencimento das próximas parcelas: </p>');
+			if(parcela > 0)	
+			for(i=parcela-1; i<(parcelas-1); i++){
+				$('.boxIntervaloParcelas').append(
+					'<div class="input number">'
+						+'<label for="IntervaloParcela' + (i) + '">Parcela ' + (1*i+2) + '</label>'
+						+'<input id="IntervaloParcela' + (i) + '" class="span2 intervalos" type="text" name="data[IntervaloParcela][' + (i) + ']">'
+					+'</div>'
+				);
+			}
+			AtualizaIntervalo();
+		$('.boxIntervaloParcelas').fadeIn();
+		}else if(parcela == parcelas){
+			$('.boxIntervaloParcelas').html('');
+			$('.boxIntervaloParcelas').hide();
+			$('#ContaIntervalos').val('');
+		}
+	}
+	
+	function AtualizaIntervalo(){
+//		var aux='';
+//		$('.intervalos').each(function(i){
+//			if( i > 0 )
+//				aux+='|';
+//			aux += $('.intervalos:eq('+i+')').val();			
+//		});
+//		$('#ContaIntervalos').val(aux);
+//	}
+//	$('.intervalos').live('change',function(){
+//		AtualizaIntervalo();
+//	});
+		$('.intervalos').mask('99/99/9999').datepicker(DATE_PICKER_CONFIG);
+	
+	}	
+	
+	
+	$('#ContaParcela').change(function(){
+		IntervaloEntreParcelas();
+	});
+	
+	$('#ContaParcelas').change(function(){
+		IntervaloEntreParcelas();
+	});
+	//
+	//=============== FIM INTERVALO ENTRE DATAS
+	//
+	
+	//
+	//====================================== VINCULAR PEDIDOS
+	//
+	// Bloqueando o Enter no campo Cliente
+	$('#Cliente').keypress(function(e){
+		if ( e.which == 13 ) {
+			return false;
+		}
+	}).simpleAutoComplete(APP +'/'+$('#role').val()+'/clientes/all', {}, callbackCliente);
+	function callbackCliente( par ) { 
+		$('#ClienteId').val(par[0]);
+		carregarPedidos();
+	}
+	
+	function carregarPedidos(){
+		if(!isNaN($("#ClienteId").val()) && $("#ClienteId").val()>0 ){
+			$('#boxPedidos').html('<div style="text-align: center;"><img src="'+APP+'/img/icones/ajax-loader.gif"> Carregando ...</div>').slideDown(400);
+		
+			$.post(APP +'/'+$('#role').val()+'/pedidos/by_cliente/'+$("#ClienteId").val(),{
+				conta:1,
+				selected:$('#ClienteId').val() 
+			},function(data){
+				$('#boxPedidos').html(data);
+			});
+			//$('#boxPedidos').show();
+		}
+	}
+	$('.btn-pedido-add').die('click').live('click',function(e){
+		var id= $(this).attr('rel');
+		$.post(APP +'/'+$('#role').val()+'/conta_pedidos/add/',{
+			pedido_id: id ,
+			cliente:$('#boxPedidos tr.'+id+' .cliente').html(),
+			obra:$('#boxPedidos tr.'+id+' .obra').html()
+		},function(data){
+			$('#tbPedidos').load(APP +'/'+$('#role').val()+'/item_notas/tbpedidos');
+			$('#boxPedidos tr.'+ id).fadeOut(function(){$(this).remove();VerificaTabela();});
+			
+		});
+	});
+	$('.remover').die('click').live('click', function(e){
+		e.preventDefault();	
+		if (confirm('Deseja realmente remover este item?')) {
+			var id = $(this).parents('tr').attr('class');
+			$.post(APP +'/'+$('#role').val()+'/conta_pedidos/del',{ 
+				indice: id 
+			},function(data){
+				$('#tbPedidos .'+ id).remove();
+			},'html');
+		}
+	});
+	//
+	//====================================== FIM VINCULAR PEDIDOS
+	//
+	
+	AtualizaIntervalo();
+});

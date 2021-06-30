@@ -1,0 +1,60 @@
+<?php echo $this->Html->script(array('notas/index'), array('inline' => false)) ?>
+<p class="lead">NOTAS</p>
+<div class="actions">
+	<br />
+	<a href="<?php echo Router::url( array( 'controller' => 'notas', 'action' => 'add', $this->params['prefix'] => true ) ) ?>" class="btn btn-primary"><i class="icon-plus-sign icon-white"></i>&nbsp;Adicionar</a>
+	<br /><br />
+</div>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th><?php echo $this->Paginator->sort( 'Nota.numero', 'Nota' ) ?></th>
+			<th><?php echo $this->Paginator->sort( 'Empresa.nome', 'Empresa' ) ?></th>
+			<th><?php echo $this->Paginator->sort( 'Cliente.nome', 'Cliente' ) ?></th>
+			<th><?php echo $this->Paginator->sort( 'Nota.observacao', 'Observacao' ) ?></th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+			<?php 
+			$er = '/page:[0-9]*[\/]?/i';
+			echo preg_replace($er, '', $this->Form->create(null, array('type' => 'get')) ); 
+			?>
+			<td><input type="text" name="Nota.numero" value="<?php echo ( !empty( $this->params->named['Nota_numero'] ) ? $this->params->named['Nota_numero'] : '' ) ?>" /></td>
+			<td><input type="text" name="Empresa.nome" value="<?php echo ( !empty( $this->params->named['Empresa_nome'] ) ? $this->params->named['Empresa_nome'] : '' ) ?>" /></td>
+			<td><input type="text" name="Cliente.nome" value="<?php echo ( !empty( $this->params->named['Cliente_nome'] ) ? $this->params->named['Cliente_nome'] : '' ) ?>" /></td>
+			<td><input type="text" name="Nota.observacao"  value="<?php echo ( !empty( $this->params->named['Nota.observacao'] ) ? $this->params->named['observacao'] : '' ) ?>" /></td>
+			<td style="text-align: center;"><button type="submit" class="btn"><i class="icon-search"></i></button></td>
+			<?php echo $this->Form->end() ?>
+		</tr>
+	</thead>
+	<tbody>
+		<?php if ( $total ): ?>
+			<?php foreach ( $rows as $row ): ?>
+				<tr>
+					<td><?php echo $row['Nota']['numero'] ?></td>
+					<td><?php echo $row['Empresa']['nome'] ?></td>
+					<td><?php echo $row['Cliente']['nome'] ?></td>
+					<td><?php echo substr($row['Nota']['observacao'],0,25) ?></td>
+					<td style="text-align: center;">
+						<?php echo $this->Html->image( 'icones/edit.png', array('url' => array('controller'=>'notas','action'=>'edit',$row['Nota']['id']), 'border' => '0', 'title' => 'EDITAR NOTA', 'class'=>'btn')) ?>
+						<?php echo $this->Html->image( 'icones/print.png', array('id'=>$row['Nota']['cliente_id'] ,'url' => '#', 'border' => '0', 'title' => 'IMPRIMIR ENDERECO DO CLIENTE', 'class'=>'btn endereco-print')) ?>
+						<a target="_blank" href="<?php echo $this->Html->url(array('action'=>'imprimir',$row['Nota']['id']));?>" title='IMPRIMIR NOTA FISCAL' class='btn'>
+							<i class="icon icon-file"></i>
+						</a>
+						<?php echo $this->Html->image( 'icones/delete.png', array( 'url' => array( 'controller' => 'notas', 'action' => 'del', $row['Nota']['id'], $this->params['prefix'] => true ), 'border' => '0', 'title' => 'Apagar registro', 'class' => 'btn' ,'onclick'=>"return confirm('Deseja realmente remover este registro?');") ) ?>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<tr>
+				<td colspan="5"><strong>Não há registros cadastrados no momento.</strong></td>
+			</tr>
+		<?php endif; ?>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="5"><strong>Total de registros <?php echo $total ?>.</strong></td>
+		</tr>
+	</tfoot>
+</table>
+<?php echo $this->element( 'paginacao', array( 'url' => $this->params->query ) ) ?>

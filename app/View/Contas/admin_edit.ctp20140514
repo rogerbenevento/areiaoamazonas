@@ -1,0 +1,67 @@
+<?php echo $this->Html->css(array('jqueryui/jquery-ui'), null, array('inline' => false)) ?>
+<?php echo $this->Html->script(array('jquery-ui-1.8.21.custom.min','jquery.maskedinput-1.3.min','jquery.price_format.1.7.min', 'contas/edit'), array('block' => 'scriptBottom')) ?>
+<p class="lead">
+	<?php echo $this->Html->link('Gerenciar Contas a Pagar / Receber', array('controller' => 'contas', 'action' => 'index')) ?>
+	:: Editar
+</p>
+<?php echo $this->Form->create( 'Conta', array(  ) ); ?>
+	<?php echo $this->Form->input('conta_id', array('type' => 'hidden')); ?>
+	<?php echo $this->Form->input('pedido_id', array('type' => 'hidden')); ?>
+	<?php echo $this->Form->input('compra_id', array('type' => 'hidden')); ?>
+	<?php if (!empty($this->request->data)): ?>
+		<?php echo $this->Form->input('editar', array('options' => array('uma'=>'Somente esta', 'todas'=>'A partir desta'), 'default' => 'uma', 'type'=>'radio', 'legend'=>'Alterar conta')) ?>
+		<br />
+	<?php endif; ?>
+
+	<?php echo $this->Form->input( 'tipo', array( 'options' => $tipos, 'class' => 'span6', 'empty' => '(Escolha o tipo de conta)', 'label' => 'Tipo de Conta' ) ); ?>
+	<?php echo $this->Form->input( 'empresa_id', array( 'options' => $empresas, 'class' => 'span6', 'empty' => '[ Escolha a Empresa ]', 'label' => 'Empresa' ) ); ?>
+	<?php #echo $this->Form->input( 'conta_corrente_id', array( 'options' => $contas, 'class' => 'span6', 'empty' => '[ Escolha a conta destino ]', 'label' => 'Destino' ) ); ?>
+	<?php #echo $this->Form->input( 'tipo_pagamento_id', array( 'options' => $tipos_pagamentos, 'class' => 'span6', 'empty' => '[ Escolha o tipo de pagamento ]', 'label' => 'Pagamento' ) ); ?>
+	<?php echo $this->Form->input( 'tipo_conta_id', array( 'options'=>$tipos_contas,'class' => 'span6', 'empty' => '[ Escolha o Tipo de Conta ]', 'label' => 'Tipo Conta' ) ); ?>
+	<?php #echo $this->Form->input( 'subtipo_conta_id', array( 'options'=>$subtipos_contas,'class' => 'span6', 'empty' => '[ Escolha o SubTipo de Conta ]', 'label' => 'SubTipo Conta' ) ); ?>
+	<?php echo $this->Form->input( 'loja_id', array( 'class' => 'span6', 'empty' => '[ Escolha uma Loja ]' ) ); ?>
+	
+	<?php echo $this->Form->input( 'descricao', array( 'label' => 'Descrição', 'class' => 'span6' ) ); ?>
+	<?php echo $this->Form->input( 'numero_documento', array( 'label' => 'Numero Documento', 'class' => 'span6' ) ); ?>
+	
+	<?php $data = ( !empty( $this->request->data ) ) ? $this->Time->format( 'd/m/Y', $this->request->data['Conta']['data_vencimento'] ) : '';?>
+	<?php echo $this->Form->input( 'data_vencimento', array( 'class' => 'span6', 'type' => 'text', 'value' => $data ) ); ?>
+
+	<?php $valor = !empty($this->request->data['Conta']['valor']) ? $this->Number->format($this->request->data['Conta']['valor'], array('before'=>'', 'decimals'=>',', 'thousands'=>'.')) : ''; ?>
+	<?php echo $this->Form->input( 'valor', array( 'class' => 'span6', 'type' => 'text', 'value' => $valor ) ); ?>
+	
+	<?php 
+		if(!empty($this->request->data['Conta']['pago'])){
+			$pago = !empty($this->request->data['Conta']['pago'])? moedaBr($this->request->data['Conta']['pago']) : '';
+			echo $this->Form->input( 'pago', array( 'class' => 'span6', 'type' => 'text', 'value' => $pago ) ); 
+		}
+	?>
+
+	<?php echo $this->Form->input( 'parcela', array( 'class' => 'span6', 'default' => 1 ) ); ?>
+	<?php echo $this->Form->input( 'parcelas', array( 'class' => 'span6', 'default' => 1 ) ); ?>
+	<?php echo $this->Form->hidden( 'intervalos'); ?>
+	<div class=" well boxIntervaloParcelas" style="display: <?php echo (empty($IntervalosParcelas)?'none':'block');?>;">
+		<p class="lead">Vencimento das próximas parcelas: : </p>
+		<?php 
+			// Salva-se qual é a primeira parcela
+			$parcela = $this->request->data['Conta']['parcela'];
+			//pr($IntervalosParcelas);
+			if(!empty($IntervalosParcelas) and is_array($IntervalosParcelas))
+			foreach ($IntervalosParcelas as $key=>$value){
+//				if($value['hidden']){
+//					// Parcela anterior a atual, esconder o input para o javascript funcionar sem problemas
+//					echo $this->Form->hidden( 'IntervaloParcela.'.$key,array('class'=>'intervalos','value'=>$value['dias']));
+//				}else{
+//					// Parcela atual ou posterior, imprimir o input e incrementar a variavel da parcela
+//					echo $this->Form->input( 'IntervaloParcela.'.$key,array('class'=>'span1 intervalos','label'=>'Parcela '.$parcela.' e Parcela '.++$parcela,'value'=>$value['dias'],'type'=>'number'));
+//				}
+				echo $this->Form->input( 'IntervaloParcela.'.$key,array('class'=>'span2 intervalos','label'=>'Parcela '.++$parcela,'value'=>$value,'type'=>'text'));
+			}
+		?>		
+	</div>
+	<?php echo $this->Form->input( 'observacao', array( 'type' => 'textarea', 'class' => 'span6', 'rows' => 5, 'label' => 'Observação' ) ); ?>
+	
+	<?php echo $this->Form->submit( 'Gravar', array( 'class' => 'btn btn-primary' ) ); ?>
+<?php echo $this->Form->end(); ?>
+
+<?php echo $this->Html->link('Voltar', array('action' => 'index')); ?>

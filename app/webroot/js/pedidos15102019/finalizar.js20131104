@@ -1,0 +1,47 @@
+$(document).ready(function(){
+	var VALOR_FRETEIRO=0.65;
+	var VALOR_FRETE=[20,30];
+	
+	
+	$('#valor,.frete,#ItemPedidoValorUnitario').priceFormat({
+			prefix: "",
+			centsSeparator: ",",
+			thousandsSeparator: ""
+	});
+	$('#ItemPedidoValorUnitario,#ItemPedidoQuantidade').keyup(function(){
+		var valor_total=($('#ItemPedidoValorUnitario').val().replace('R$ ','').replace('.','').replace(',','.')*1)
+					* $('#ItemPedidoQuantidade').val();
+		$('#ItemPedidoPago,#ItemPedidoPagoDisplay').val( number_format(valor_total,2,',','.'));
+		AtualizarFreteiro(valor_total);
+	});
+	
+	$('#ValeMotoristaId').change(function(){
+		if( $.inArray( $(this).val()*1 ,FRETEIROS) > -1){
+			freteiro= true;		
+			$('#ValePeriodoId').off('change');
+			AtualizarFreteiro(0);
+		}else{
+			freteiro = false;
+			$('#ValePeriodoId').on('change',function(){
+				AtualizarFrete();
+			});
+			$('#ItemPedidoFrete').val('');
+			AtualizarFrete();
+		}
+	});
+	var atualizar = false;
+	var freteiro = false;
+	function AtualizarFreteiro(valor){
+		if(freteiro){
+			if(valor==0){
+				valor=($('#ItemPedidoValorUnitario').val().replace('R$ ','').replace('.','').replace(',','.')*1)
+					* $('#ItemPedidoQuantidade').val();
+			}
+			var frete= valor*VALOR_FRETEIRO;
+			$('#ItemPedidoFrete').val(number_format(frete,2,',','.'));
+		}
+	}
+	function AtualizarFrete(){
+		$('#ItemPedidoFrete').val(number_format(VALOR_FRETE[$('#ValePeriodoId').val()-1],2,',','.'));
+	}
+});

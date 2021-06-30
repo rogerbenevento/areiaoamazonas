@@ -1,0 +1,38 @@
+#ui-datepicker-div{
+	margin-top: -50px;
+}
+body{
+	position: relative;
+	background-color: white;
+	background-image: url(../img/grid-18px-masked.png);
+	background-repeat: repeat-x;
+}
+.header{ display: block; }
+.header .logo{ float: right; }
+.header .logo img{ width: 120px; }
+
+.header .user{
+	padding-top: 15px;
+	float: left;
+	width: 85%;
+}
+.header .user p{ padding: 0; margin: 0; padding-bottom: 5px; }
+.header .user p:last-child{ padding-bottom: 20px; }
+
+.footer{
+	margin: 20px 0 5px;
+	border-top: 1px solid #ccc;
+	padding: 10px;
+	text-align: right;
+}
+
+.container{ position: relative; }
+.actions{ float: left; }
+.relatorios{ float: right; text-align: right; }
+
+.block_head {
+	height: 54px;
+	line-height: 54px;
+	background: white;
+	overflow: hidden;
+}

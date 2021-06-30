@@ -1,0 +1,23 @@
+$(document).ready(function(){
+
+	$('#ObraCnpj').mask('99.999.999/9999-99');
+	$('#ObraCep').mask('99999-999');
+	$('#ObraComissao,#ObraFreteiro').priceFormat({
+		prefix: "",
+		limit:4,
+		centslimit:2,
+		centsSeparator: "."
+	});
+
+	$('#ObraEstadoId').change(function(){
+		var estado_id = $(this).val();
+		var cidades = $('#ObraCidadeId');
+		
+		cidades.html('<option value="">Carregando...</option>');
+		$.get(APP +'/'+$('#role').val()+'/cidades/by_estado',{ 
+                    estado_id: estado_id 
+                },function(data){
+                        cidades.html(data);
+		},'html');
+	});
+});

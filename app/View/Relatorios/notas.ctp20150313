@@ -1,0 +1,189 @@
+<?php
+
+	//pr($notas);exit();
+	//echo $this->element('sql_dump');
+	//pr($notas);exit();
+	App::import('Vendor', 'xtcpdf');
+	define('ITENS_POR_PAGINA', 30);
+	define('font', '');
+	
+	// CONFIGURACOES
+	$limite_frete_casa=70;
+	$limite_frete_freteiro=50;
+	$preco_diurno = 20;
+	$preco_noturno= 30;
+	$porcentagem_freteiro = 0.65;
+	$perc_icms=0.08;
+	//$percent_comissao=0.04;
+	$strike = false;	
+	
+	
+	//
+	
+	//ITENS_POR_PAGINA = 19;     
+	//font = 'freesans';         // looks better, finer, and more condensed than 'dejavusans'
+	$c = 0;				 //contador de itens impressos
+	//Array  de configuracao da coluna
+	function getCol() {
+		return array(
+		    15, // Nº
+		    15, // Data
+		    20, // Carrego
+		    80, // Material
+		    150 // Lucro
+		);
+	}
+	
+	$mes=array('jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez');
+	
+	
+
+	function formataData($dateString) {
+		$arr = date_parse($dateString);
+		if ($arr["day"] < 10)
+			$arr["day"] = "0" . $arr["day"];
+		return $arr["day"] . "/" . $arr["month"] . "/" . $arr["year"];
+	}
+
+	function limitarString($string, $msn) {
+		return substr($string, 0, $msn);
+	}
+
+	$tcpdf = new XTCPDF();
+	$tcpdf->setPageOrientation('L');
+
+
+	$tcpdf->SetTitle('Relação Mensal');
+	$tcpdf->SetAuthor("Areiao Amazonas");
+
+	// add a page (required with recent versions of tcpdf)
+	function addPage($pdf, &$imprimir_cabecalho) {
+		$pdf->AddPage();
+		$pdf->SetXY(110, 10);
+		$pdf->SetFontSize(20);
+		$pdf->SetFont('', '');
+		$pdf->writeHTML('Relação de Notas');
+		$pdf->SetXY(10, 24);
+		$pdf->SetFontSize(10);
+		$imprimir_cabecalho = true;
+	}
+
+
+	
+
+	function cabecalho($nota, &$imprimir_cabecalho,  TCPDF &$pdf,$c) {
+		if ($imprimir_cabecalho) {
+			
+			$pdf->SetFont('', 'B', 9);
+			$i = 0;
+			$col = getCol();
+			$pdf->Cell($col[$i++], 0, 'Nº', 0, 0,'C');
+			$pdf->Cell($col[$i++], 0, 'Data', 0, 0,'C');
+			$pdf->Cell($col[$i++], 0, 'Empresa', 0, 0,'C');
+			$pdf->Cell($col[$i++], 0, 'Cliente', 0, 0,'C');
+			
+			$pdf->Cell($col[$i++], 0, 'Observação', 0, 0,'C');
+	//            $pdf->writeHTMLCell(15, 0, $pdf->GetX(), $pdf->GetY(), '<b>Pedido',0,0,false,true,'C');
+	//            $pdf->writeHTMLCell(35, 0, $pdf->GetX(), $pdf->GetY(), '<b>Nota');
+	//            $pdf->writeHTMLCell(45, 0, $pdf->GetX(), $pdf->GetY(), '<b>Cliente');
+	//            $pdf->writeHTMLCell(20, 0, $pdf->GetX(), $pdf->GetY(), '<b>Data',0,0,false,true,'C');
+	//            $pdf->writeHTMLCell(20, 0, $pdf->GetX(), $pdf->GetY(), '<b>Arred.',0,0,false,true,'R');
+	//            $pdf->writeHTMLCell(25, 0, $pdf->GetX(), $pdf->GetY(), '<b>Desconto',0,0,false,true,'R');
+	//            $pdf->writeHTMLCell(30, 0, $pdf->GetX(), $pdf->GetY(), '<b>Valor',0,0,false,true,'R');
+	//            $pdf->writeHTMLCell(30, 0, $pdf->GetX(), $pdf->GetY(), '<b>Comissão',0,0,false,true,'R');
+	//            $pdf->writeHTMLCell(30, 0, $pdf->GetX(), $pdf->GetY(), '<b>V.Garantia',0,0,false,true,'R');
+	//            $pdf->writeHTMLCell(30, 0, $pdf->GetX(), $pdf->GetY(), '<b>Comissão',0,0,false,true,'R');
+			$pdf->Ln();
+			//========Linha
+			$pdf->SetY($pdf->GetY() + 1);
+			$pdf->Line(10, $pdf->GetY(), 290, $pdf->GetY()); // Desenha uma linha
+			$pdf->SetY($pdf->GetY() + 1);
+			$imprimir_cabecalho = false;
+		}//if imprimir cabecalho
+	}
+
+		
+	$imprimir_cabecalho = true;
+	//    addPage($tcpdf,font);
+	
+	if (count($notas) > 0) {
+		foreach ($notas as $nota) {
+			
+			/**
+			 * Cabecalho dos Pedidos
+			 */
+			if ($imprimir_cabecalho) {
+				if (($c % ITENS_POR_PAGINA) == 0 || (($c+1) % ITENS_POR_PAGINA) == 0|| (($c+2) % ITENS_POR_PAGINA) == 0){
+					addPage($tcpdf, $imprimir_cabecalho);
+					$c=0;
+				}
+				cabecalho($nota, $imprimir_cabecalho, $tcpdf,$c);
+				$c++;
+				$c++;
+			}
+
+			if (($c % ITENS_POR_PAGINA) == 0) {
+				addPage($tcpdf, $imprimir_cabecalho);
+				$c=0;
+				cabecalho($nota, $imprimir_cabecalho, $tcpdf,$c);
+				$c++;
+				$c++;
+			}
+			$tcpdf->SetFontSize(8);
+			$i = 0;
+			$col = getCol();
+		
+		
+			
+			$data = ($nota['Nota']['data_entrega']);
+			$tcpdf->SetFont ('', '');
+			
+			$nome_obra='';
+			$ligacao = false;
+			if(!empty($nota['Cliente']['nome'])){
+				if(mb_detect_encoding ($nota['Cliente']['nome'])=='UTF-8')
+					$nota['Cliente']['nome']= RemoverAcentuacoes($nota['Cliente']['nome']);
+				
+				//$nota['Cliente']['nome']= RemoverAcentuacoes( $nota['Cliente']['nome'] );
+				
+				$nome_obra .= substr($nota['Cliente']['nome'],0,18);
+				
+				$ligacao=true;
+			}
+			
+			$color=(($c%2)==0)? 255:245;
+			$tcpdf->SetFillColor($color, $color, $color);
+			
+			#$tcpdf->Cell($col[$i++], 0, $nota['Nota']['id']);
+			$tcpdf->Cell($col[$i++], 0, $nota['Nota']['numero'],0,0,'',true);
+			$tcpdf->Cell($col[$i++], 0, $nota['Nota']['emissao'],0,0,'',true);
+			$tcpdf->Cell($col[$i++], 0, limitarString($nota['Empresa']['nome'],10),0,0,'',true);
+			$tcpdf->Cell($col[$i++], 0, limitarString($nota['Cliente']['nome'], 100),0,0,'',true);
+			
+			$tcpdf->SetFont ('', '');
+			$tcpdf->Cell($col[$i++], 0,limitarString($nota['Nota']['observacao'],90),0,0,'L',true);
+
+			//========Linha
+			$tcpdf->Ln();
+			$tcpdf->SetY($tcpdf->GetY() + 1);
+			$tcpdf->Line(10, $tcpdf->GetY(), 290, $tcpdf->GetY()); // Desenha uma linha
+			$tcpdf->SetY($tcpdf->GetY() + 1);
+			$c++;			
+			
+		}//foreach
+		//Imprime a ultima linha
+
+		
+		
+	} else {
+		addPage($tcpdf);
+		$tcpdf->writeHTMLCell(280, 0, $tcpdf->GetX(), $tcpdf->GetY(), 'No momento não há não há pedidos finalizados!');
+	}
+
+	
+	ob_clean();
+	ob_end_clean();
+	ob_start();
+	echo $tcpdf->Output();
+	ob_end_flush();
+?>

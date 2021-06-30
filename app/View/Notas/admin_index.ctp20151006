@@ -1,0 +1,83 @@
+<?php echo $this->Html->script(array('notas/index'), array('inline' => false)) ?>
+<p class="lead">NOTAS</p>
+<div class="actions">
+	<br />
+	<a href="<?php echo Router::url( array( 'controller' => 'notas', 'action' => 'add', $this->params['prefix'] => true ) ) ?>" class="btn btn-primary"><i class="icon-plus-sign icon-white"></i>&nbsp;Adicionar</a>
+	<br /><br />
+</div>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th class="span1"><?php echo $this->Paginator->sort( 'Nota.numero', 'Nota' ) ?></th>
+			<th><?php echo $this->Paginator->sort( 'Empresa.nome', 'Empresa' ) ?></th>
+			<th ><?php echo $this->Paginator->sort( 'Cliente.nome', 'Cliente' ) ?></th>
+			<th class="span3"><?php echo $this->Paginator->sort( 'Nota.observacao', 'Observacao' ) ?></th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+			<?php 
+			$er = '/page:[0-9]*[\/]?/i';
+			echo preg_replace($er, '', $this->Form->create(null, array('type' => 'get')) ); 
+			?>
+			<td><input type="text" class="span1" name="Nota.numero" value="<?php echo ( !empty( $this->params->named['Nota_numero'] ) ? $this->params->named['Nota_numero'] : '' ) ?>" /></td>
+			<td><input type="text" name="Empresa.nome" value="<?php echo ( !empty( $this->params->named['Empresa_nome'] ) ? $this->params->named['Empresa_nome'] : '' ) ?>" /></td>
+			<td><input type="text" name="Cliente.nome" value="<?php echo ( !empty( $this->params->named['Cliente_nome'] ) ? $this->params->named['Cliente_nome'] : '' ) ?>" /></td>
+			<td><input type="text" name="Nota.observacao"  value="<?php echo ( !empty( $this->params->named['Nota.observacao'] ) ? $this->params->named['observacao'] : '' ) ?>" /></td>
+			<td style="text-align: center;"><button type="submit" class="btn"><i class="icon-search"></i></button></td>
+			<?php echo $this->Form->end() ?>
+		</tr>
+	</thead>
+	<tbody>
+		<?php if ( $total ): ?>
+			<?php foreach ( $rows as $row ): ?>
+				<tr>
+					<td><?php echo $row['Nota']['numero'] ?></td>
+					<td><?php echo $row['Empresa']['nome'] ?></td>
+					<td><?php echo $row['Cliente']['nome'] ?></td>
+					<td><?php echo substr($row['Nota']['observacao'],0,25) ?></td>
+					<td style="text-align: center;">
+						<div class="btn-group">
+							<a href="<?php echo $this->Html->url(array('controller'=>'notas','action'=>'edit',$row['Nota']['id']))?>" class="btn" title="Editar Nota">
+								<?php echo $this->Html->image( 'icones/edit.png', array( 'border' => '0', 'title' => 'EDITAR NOTA')) ?>
+							</a>
+							<a id="<?php echo $row['Nota']['cliente_id']?>" href="#" class="btn" title="IMPRIMIR ENDERECO DO CLIENTE" class="btn endereco-print">
+								<?php echo $this->Html->image( 'icones/print.png', array('border' => '0')) ?>
+							</a>
+							<li class="dropdown dropdown-toggle btn " style="padding: 0px 0px 0px 0px;">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="line-height: 28px;padding: 4px 12px 4px 12px;">
+								<i class="icon icon-file"></i>Imprimir <b class="caret" style="margin-top: 11px"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a target="_blank" href="<?php echo $this->Html->url(array('action'=>'imprimir/'.$row['Nota']['id'],1));?>" title='IMPRIMIR NOTA FISCAL'>
+										<i class="icon icon-print"></i> OKI 320 Turbo
+									</a>	
+								</li>
+								<li>
+									<a target="_blank" href="<?php echo $this->Html->url(array('action'=>'imprimir',$row['Nota']['id']));?>" title='IMPRIMIR NOTA FISCAL'>
+										<i class="icon icon-print"></i> OKI 321 Turbo
+									</a>	
+								</li>
+							</ul>
+						</li>
+							<a href="<?php echo $this->Html->url(array('controller'=>'notas','action'=>'del',$row['Nota']['id']))?>" class="btn" title="Deletar Nota" onclick="return confirm('Deseja realmente remover este registro?');">
+								<?php echo $this->Html->image( 'icones/delete.png', array( 'border' => '0' ) ) ?>
+							</a>
+						</div>
+						
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<tr>
+				<td colspan="5"><strong>Não há registros cadastrados no momento.</strong></td>
+			</tr>
+		<?php endif; ?>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="5"><strong>Total de registros <?php echo $total ?>.</strong></td>
+		</tr>
+	</tfoot>
+</table>
+<?php echo $this->element( 'paginacao', array( 'url' => $this->params->query ) ) ?>

@@ -1,0 +1,28 @@
+<li <?php if ( $this->params['controller'] == 'pedidos' and  substr_count($this->params['action'],'index')==1) echo 'class="active"' ?>>
+    <?php echo $this->Html->link( "Pedidos", "/{$this->params['prefix']}/pedidos/index" ); ?>
+</li>
+<li <?php if ( $this->params['controller'] == 'pedidos' and  substr_count($this->params['action'],'aberto')==1) echo 'class="active"' ?>>
+    <?php echo $this->Html->link( "Finalizar Pedidos", "/{$this->params['prefix']}/pedidos/abertos" ); ?>
+</li>
+<li <?php if ( $this->params['controller'] == 'pedidos' and  substr_count($this->params['action'],'finalizados')==1) echo 'class="active"' ?>>
+    <?php echo $this->Html->link( "Pedidos Finalizados", "/{$this->params['prefix']}/pedidos/finalizados" ); ?>
+</li>
+<!-- FINANCEIRO -->
+<?php
+$financeiro_class = ( in_array($this->params['controller'], array('compras','contas','caixa','notas','empresas'))) ? 'active' : '';
+?>
+<li class="dropdown <?php echo $financeiro_class ?>">
+	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiro <b class="caret"></b></a>
+	<ul class="dropdown-menu">
+		
+		<li <?php if ( $this->params['controller'] == 'contas') echo 'class="active"' ?>>
+			<?php echo $this->Html->link( "Contas", "/{$this->params['prefix']}/contas/" ); ?>
+		</li>
+		
+		<li class="divider"></li>
+		<li <?php if ( $this->params['controller'] == 'tipos_contas') echo 'class="active"' ?>>
+			<?php echo $this->Html->link( "Tipos de Contas", "/{$this->params['prefix']}/tipos_contas/" ); ?>
+		</li>
+			
+	</ul>
+</li>
