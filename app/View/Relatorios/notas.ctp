@@ -14,14 +14,14 @@
 	define('font', '');
 	
 	// CONFIGURACOES
-	$limite_frete_casa=70;
-	$limite_frete_freteiro=50;
-	$preco_diurno = 20;
-	$preco_noturno= 30;
-	$porcentagem_freteiro = 0.65;
-	$perc_icms=0.08;
+	$limite_frete_casa 		= 70;
+	$limite_frete_freteiro 	= 50;
+	$preco_diurno 			= 20;
+	$preco_noturno 			= 30;
+	$porcentagem_freteiro 	= 0.65;
+	$perc_icms 				= 0.08;
 	//$percent_comissao=0.04;
-	$strike = false;	
+	$strike 				= false;	
 	
 	
 	//
@@ -121,8 +121,8 @@
 		
 	$imprimir_cabecalho = true;
 	//    addPage($tcpdf,font);
-	$nota_numero=0;
-	if (count($notas) > 0){
+	$nota_numero = 0;
+	if (count($notas) > 0) {
 		//echo json_encode($notas); exit;
 		foreach ($notas as $nota) {
 			

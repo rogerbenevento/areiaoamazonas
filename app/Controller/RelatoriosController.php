@@ -161,7 +161,8 @@ class RelatoriosController extends AppController{
 		$this->set('empresas', $this->Empresa->find('list', array('conditions'=>array('Empresa.habilitado'=>1),'fields' => array('Empresa.nome'))));
 	}
 	
-	public function notas() {
+	public function notas() 
+	{
 		if (!empty($this->request->data)) {
 //			if ((empty($this->request->data['Relatorio']['inicio']) && !empty($this->request->data['Relatorio']['fim']))
 //				   || (!empty($this->request->data['Relatorio']['inicio']) && empty($this->request->data['Relatorio']['fim']))
@@ -173,25 +174,42 @@ class RelatoriosController extends AppController{
 			//Configure::write('debug', 0);
 			//pr($this->request->data);
 			$conditions=array();
-			if(is_array($this->conditions))
-				foreach ($this->conditions as $campo => $valor) {
+			if ( is_array($this->conditions) ) {
+				foreach ( $this->conditions as $campo => $valor ) {
 					$conditions = array_merge($conditions, array($campo => $valor));
 				}
-			if ($this->request->data['Relatorio']['inicio'] != '' && $this->request->data['Relatorio']['fim'] != '')
-				$conditions = array_merge($conditions, array('Nota.emissao >=' => dateFormatBeforeSave($this->request->data['Relatorio']['inicio']) . " 00:00:00",
-				    'Nota.emissao <=' => dateFormatBeforeSave($this->request->data['Relatorio']['fim']) . " 23:59:59"
-					   ));
-			if (!empty($this->request->data['Relatorio']['empresa_id']))
-				$conditions = array_merge($conditions, array('Nota.empresa_id' => $this->request->data['Relatorio']['empresa_id']));
-			if (!empty($this->request->data['Relatorio']['cliente_id']))
-				$conditions = array_merge($conditions, array('Nota.cliente_id' => $this->request->data['Relatorio']['cliente_id']));
-			if (!empty($this->request->data['Relatorio']['vendedor_id']))
-				$conditions = array_merge($conditions, array('Pedido.user_id' => $this->request->data['Relatorio']['vendedor_id']));
-			//if (!empty($this->request->data['Relatorio']['cliente_id']))
-			//echo 'aaaaaaaaaa';
-			//echo !empty($this->request->data['Relatorio']['cliente_id']); exit;
-		//	echo json_encode($conditions); exit;
+			}
+
+			if ( $this->request->data['Relatorio']['inicio'] != '' && $this->request->data['Relatorio']['fim'] != '' ) {
+				$conditions = array_merge( $conditions, array(
+					'Nota.emissao >=' => dateFormatBeforeSave($this->request->data['Relatorio']['inicio']) . " 00:00:00",
+				    'Nota.emissao <=' => dateFormatBeforeSave($this->request->data['Relatorio']['fim']) . " 23:59:59",
+				));
+			}
 			
+			if (!empty($this->request->data['Relatorio']['empresa_id'])) {
+				$conditions = array_merge(
+					$conditions, array(
+						'Nota.empresa_id' => $this->request->data['Relatorio']['empresa_id']
+					)
+				);
+			}
+
+			if (!empty($this->request->data['Relatorio']['cliente_id'])) {
+				$conditions = array_merge(
+					$conditions, array(
+						'Nota.cliente_id' => $this->request->data['Relatorio']['cliente_id']
+					)
+				);
+			}
+
+			if (!empty($this->request->data['Relatorio']['vendedor_id'])) {
+				$conditions = array_merge(
+					$conditions, array(
+						'Pedido.user_id' => $this->request->data['Relatorio']['vendedor_id']
+					)
+				);
+			}
 			
 			$this->Nota->order = 'Nota.created';
 			$this->Nota->Behaviors->load('Containable');
@@ -226,16 +244,16 @@ class RelatoriosController extends AppController{
 				
 				));
 				
-				//	echo json_encode($notas); exit;
+			//	echo json_encode($notas); exit;
 			$this->set(compact('notas'));
-			#pr($this->SqlDump());
-			#exit();
-			if($this->request->data['Relatorio']['layout']==1){
-				$this->set('nome_arquivo','notas'.date('YmdHi'));
-				$this->render('nota_excel','excel');				
+			// pr($this->SqlDump()); exit();
+			if( $this->request->data['Relatorio']['layout'] == 1 ) {
+				$this->set('nome_arquivo', 'notas'.date('YmdHi'));
+				$this->render('nota_excel', 'excel');				
 			}
-		}else 
+		} else {
 			$this->redirect(array('action' => 'gerar_notas'));
+		}
 	}
 	
 	//
